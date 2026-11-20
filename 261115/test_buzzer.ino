@@ -1,13 +1,15 @@
-#define POT_PIN 39       // Potentiometer
+#define BUZZER_PIN 5     // Buzzer
 
 void setup() {
-  Serial.begin(115200);
 }
 
 void loop() {
-  int value = analogRead(POT_PIN);
-
-  Serial.println(value);
-  
-  delay(10);
+  tone(BUZZER_PIN, 64);
+  delay(1000);
+  tone(BUZZER_PIN, 128);
+  delay(1000);
+  tone(BUZZER_PIN, 256);
+  delay(1000);
+  tone(BUZZER_PIN, 0);
+  delay(1000);
 }

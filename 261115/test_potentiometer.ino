@@ -1,23 +1,13 @@
-#include <ESP32Servo.h>
-
-#define SERVO_PIN 14
-
-Servo myServo;
-
+#define POT_PIN 39       // Potentiometer
 
 void setup() {
-    myServo.attach(SERVO_PIN);
-    myServo.write(0);
+  Serial.begin(115200);
 }
 
 void loop() {
-  for (int degree = 0; degree <= 180; ++degree){
-    myServo.write(degree);
-    delay(1);
+  int value = analogRead(POT_PIN);
 
-  }
-  for (int degree = 180; degree >= 0; --degree){
-    myServo.write(degree);
-    delay(1);
-  }
+  Serial.println(value);
+  
+  delay(10);
 }
