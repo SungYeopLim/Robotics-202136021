@@ -6,14 +6,15 @@ import time
 class Publisher(Node):
     def __init__(self):
         super().__init__('publisher')
-        self.publisher_ = self.create_publisher(String, '/location', 10)
+        self.publisher_ = self.create_publisher(String, '/wasd', 10)
         self.start_time = time.time()
-        self.timer = self.create_timer(0.1, self.publish_message)
+        self.timer = self.create_timer(0.1, self.publish_msg)
 
     def publish_msg(self):
+        key = input("keyboard input: wasd").lower()
         msg = String()
-        msg.data = input("keyboard input: wasd").lower()
-        self.publisher_.publish(msg.data)
+        msg.data = key
+        self.publisher_.publish(msg)
         self.get_logger().info(f'Publishing: "{msg.data}')
         
 

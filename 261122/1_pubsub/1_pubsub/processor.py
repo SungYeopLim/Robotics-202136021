@@ -1,23 +1,21 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-import time
 import numpy as np
 
 class Processor(Node):
     def __init__(self):
         super().__init__('processor')
 
-        self.subscription_ = self.create_subscription(String, '/location', self.callback, 10)
+        self.subscription_ = self.create_subscription(String, '/wasd', self.callback, 10)
         self.subscription_
         self.publisher_ = self.create_publisher(String, '/location', 10)
 
-        self.start_time = time.time()
-        self.timer = self.create_timer(1.0, self.publish_message)
+        self.loc = np.array([0,0])
 
     def callback(self, msg):
         self.get_logger().info(f'Received: "{msg.data}"')
-        self.loc = np.array([0, 0])
+        prev = self.loc.copy()
         match msg.data:
             case "w":
                 self.loc += [0, 1]
@@ -27,12 +25,15 @@ class Processor(Node):
                 self.loc += [0, -1]
             case "d":
                 self.loc += [1, 0]
+            case _:
+                self.get_logger().warn(f'Unknown key: "{msg.data}"')
+                return
+        self.publish_message(prev)
 
 
-    def publish_message(self):
-        elapsed = int(time.time() - self.start_time)
+    def publish_message(self, prev):
         msg = String()
-        msg.data = f"({self.loc})"
+        msg.data = f"({prev[0], prev[1]}) => ({self.loc[0], self.loc[1]})"
         self.publisher_.publish(msg)
         self.get_logger().info(f'Publishing: "{msg.data}"')
         
